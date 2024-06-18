@@ -1,0 +1,24 @@
+# permissions for end users to edit cis.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ci-editor-role
+rules:
+- apiGroups:
+  - automotive.sig.centos.org
+  resources:
+  - cis
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - automotive.sig.centos.org
+  resources:
+  - cis/status
+  verbs:
+  - get

@@ -1,0 +1,6 @@
+apiVersion: automotive.sig.centos.org/v1
+kind: CI
+metadata:
+  name: ci-sample
+spec:
+  # TODO(user): Add fields here

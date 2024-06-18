@@ -37,4 +37,21 @@ rules:
       - patch
       - update
       - watch
+  ##
+  ## Rules for automotive.sig.centos.org/v1, Kind: CI
+  ##
+  - apiGroups:
+      - automotive.sig.centos.org
+    resources:
+      - cis
+      - cis/status
+      - cis/finalizers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
 #+kubebuilder:scaffold:rules
