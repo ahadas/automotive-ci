@@ -1,2 +1,2 @@
 ---
-# defaults file for CI
+smtp_api_key: ""

@@ -35,16 +35,22 @@ spec:
                 - name: EVENTLISTENERSVC
                   value: 'http://el-vote-app-ci-test.apps.automotive1.ocp.automotive.sig.centos.org:8080'
                 - name: JSONTEMPLATE
-                  value: '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}'
+                  value: '{"api_key": "API_KEY", "to": ["Arik <ahadas@redhat.com>"], "sender": "Arik Hadas <ahadas@redhat.com>", "subject": "Hello Arik", "text_body": "test", "html_body": "<h1>test</h1>"}'
+                - name: API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: smtp-secret
+                      key: api.key
               imagePullPolicy: Always
               terminationMessagePolicy: File
-              image: 'registry.redhat.io/rhel8/toolbox:latest'
+              image: 'quay.io/centos/centos:stream9'
               args:
                 - '-c'
                 - |
                   set -eu
 
-                  curl -X POST -H 'Content-Type: appcation/json'  -d '{"api_key": "api-893BF45EC9114B5798C084A1C1D380F7", "to": ["Arik <ahadas@redhat.com>"], "sender": "Arik Hadas <ahadas@redhat.com>", "subject": "Hello Arik", "text_body": "test", "html_body": "<h1>test</h1>"}' https://api.smtp2go.com/v3/email/send -v
+                  _jsondata=$(echo -n ${JSONTEMPLATE} | sed -e "s/API_KEY/$API_KEY/")
+                  curl -X POST -H 'Content-Type: appcation/json'  -d "${_jsondata}"  https://api.smtp2go.com/v3/email/send -v
           restartPolicy: Never
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst

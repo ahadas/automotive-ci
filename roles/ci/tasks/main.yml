@@ -1,6 +1,10 @@
 ---
 - block:
+  - name: "Create SMTP secret"
+    k8s:
+      state: present
+      definition: "{{ lookup('template', 'smtp-secret.yml.j2') }}"
   - name: "Apply cronjob"
     k8s:
-      state : present
+      state: present
       definition: "{{ lookup('template', 'nightly-job-test.yml.j2') }}"
