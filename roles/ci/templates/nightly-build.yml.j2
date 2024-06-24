@@ -1,0 +1,41 @@
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: nightly-build
+  namespace: autosd-ci-operator-system
+spec:
+  schedule: '@midnight'
+  concurrencyPolicy: Allow
+  suspend: false
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - resources: {}
+              terminationMessagePath: /dev/termination-log
+              name: trigger-build
+              command:
+                - /bin/sh
+              env:
+                - name: EVENTLISTENERSVC
+                  value: 'http://el-vote-app-ci-test.apps.automotive1.ocp.automotive.sig.centos.org:8080'
+                - name: JSONTEMPLATE
+                  value: '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}'
+              imagePullPolicy: Always
+              terminationMessagePolicy: File
+              image: 'registry.redhat.io/rhel8/toolbox:latest'
+              args:
+                - '-c'
+                - |
+                  set -eu
+
+                  curl -s -X POST -H 'Content-Type: application/json' -H 'X-GitHub-Event: push' -d '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}' http://el-vote-app-ci-test.apps.automotive1.ocp.automotive.sig.centos.org
+          restartPolicy: Never
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+          schedulerName: default-scheduler
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+

@@ -12,3 +12,7 @@
     k8s:
       state: present
       definition: "{{ lookup('template', 'event-listener.yml.j2') }}"
+  - name: "Apply nightly-build"
+    k8s:
+      state: present
+      definition: "{{ lookup('template', 'nightly-build.yml.j2') }}"
