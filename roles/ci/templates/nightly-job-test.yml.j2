@@ -1,7 +1,7 @@
 kind: CronJob
 apiVersion: batch/v1
 metadata:
-  name: polling-triggers
+  name: send-email
   namespace: autosd-ci-operator-system
 spec:
   schedule: '@midnight'
@@ -22,18 +22,6 @@ spec:
               command:
                 - /bin/sh
               env:
-                - name: REPONAME
-                  value: pipelines-vote-ui
-                - name: REPOBASEURL
-                  value: 'https://github.com/bysnupy'
-                - name: REPOBRANCH
-                  value: master
-                - name: REPOURL
-                  value: 'https://github.com/bysnupy/pipelines-vote-ui'
-                - name: BASEDIR
-                  value: /repolist
-                - name: EVENTLISTENERSVC
-                  value: 'http://el-vote-app-ci-test.apps.automotive1.ocp.automotive.sig.centos.org:8080'
                 - name: JSONTEMPLATE
                   value: '{"api_key": "API_KEY", "to": ["Arik <ahadas@redhat.com>"], "sender": "Arik Hadas <ahadas@redhat.com>", "subject": "Hello Arik", "text_body": "test", "html_body": "<h1>test</h1>"}'
                 - name: API_KEY
