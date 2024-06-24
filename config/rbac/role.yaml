@@ -48,6 +48,17 @@ rules:
       - list
       - watch
       - patch
+  - apiGroups:
+      - triggers.tekton.dev
+    resources:
+      - eventlisteners
+    verbs:
+      - create
+      - get
+      - delete
+      - list
+      - watch
+      - patch
   ##
   ## Rules for automotive.sig.centos.org/v1, Kind: CI
   ##
