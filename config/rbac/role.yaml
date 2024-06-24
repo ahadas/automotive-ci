@@ -47,6 +47,7 @@ rules:
       - delete
       - list
       - watch
+      - patch
   ##
   ## Rules for automotive.sig.centos.org/v1, Kind: CI
   ##
