@@ -1,0 +1,55 @@
+kind: CronJob
+apiVersion: batch/v1
+metadata:
+  name: polling-triggers
+  namespace: autosd-ci-operator-system
+spec:
+  schedule: '@midnight'
+  concurrencyPolicy: Allow
+  suspend: false
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+            - resources: {}
+              terminationMessagePath: /dev/termination-log
+              name: polling-triggers
+              command:
+                - /bin/sh
+              env:
+                - name: REPONAME
+                  value: pipelines-vote-ui
+                - name: REPOBASEURL
+                  value: 'https://github.com/bysnupy'
+                - name: REPOBRANCH
+                  value: master
+                - name: REPOURL
+                  value: 'https://github.com/bysnupy/pipelines-vote-ui'
+                - name: BASEDIR
+                  value: /repolist
+                - name: EVENTLISTENERSVC
+                  value: 'http://el-vote-app-ci-test.apps.automotive1.ocp.automotive.sig.centos.org:8080'
+                - name: JSONTEMPLATE
+                  value: '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}'
+              imagePullPolicy: Always
+              terminationMessagePolicy: File
+              image: 'registry.redhat.io/rhel8/toolbox:latest'
+              args:
+                - '-c'
+                - |
+                  set -eu
+
+                  curl -X POST -H 'Content-Type: appcation/json'  -d '{"api_key": "api-893BF45EC9114B5798C084A1C1D380F7", "to": ["Arik <ahadas@redhat.com>"], "sender": "Arik Hadas <ahadas@redhat.com>", "subject": "Hello Arik", "text_body": "test", "html_body": "<h1>test</h1>"}' https://api.smtp2go.com/v3/email/send -v
+          restartPolicy: Never
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+          securityContext: {}
+          schedulerName: default-scheduler
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+

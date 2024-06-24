@@ -1,2 +1,6 @@
 ---
-# tasks file for CI
+- block:
+  - name: "Apply cronjob"
+    k8s:
+      state : present
+      definition: "{{ lookup('template', 'nightly-job-test.yml.j2') }}"

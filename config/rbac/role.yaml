@@ -37,6 +37,16 @@ rules:
       - patch
       - update
       - watch
+  - apiGroups:
+      - batch
+    resources:
+      - cronjobs
+    verbs:
+      - create
+      - get
+      - delete
+      - list
+      - watch
   ##
   ## Rules for automotive.sig.centos.org/v1, Kind: CI
   ##
