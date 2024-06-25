@@ -59,6 +59,17 @@ rules:
       - list
       - watch
       - patch
+  - apiGroups:
+      - tekton.dev
+    resources:
+      - pipelines
+    verbs:
+      - create
+      - get
+      - delete
+      - list
+      - watch
+      - patch
   ##
   ## Rules for automotive.sig.centos.org/v1, Kind: CI
   ##

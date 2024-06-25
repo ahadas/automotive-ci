@@ -1,0 +1,109 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: ci-pipeline
+  namespace: autosd-ci-operator-system
+spec:
+  params:
+    - name: git-url
+      type: string
+    - default: main
+      name: git-revision
+      type: string
+    - name: image-name
+      type: string
+    - default: .
+      name: context-dir
+      type: string
+    - default: Containerfile
+      name: containerfile-path
+      type: string
+  tasks:
+    - name: clone-repo
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: source-workspace
+    - name: build-x86-64
+      params:
+        - name: context-dir
+          value: $(params.context-dir)
+        - name: containerfile-path
+          value: $(params.containerfile-path)
+      runAfter:
+        - clone-repo
+      taskRef:
+        kind: Task
+        name: buildah-build
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
+        - name: oci-images
+          workspace: oci-images
+    - name: build-aarch64
+      params:
+        - name: context-dir
+          value: $(params.context-dir)
+        - name: containerfile-path
+          value: $(params.containerfile-path)
+      runAfter:
+        - clone-repo
+      taskRef:
+        kind: Task
+        name: buildah-build
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
+        - name: oci-images
+          workspace: oci-images
+    - name: push-image
+      params:
+        - name: image-name
+          value: $(params.image-name)
+        - name: architectures
+          value:
+            - x86_64
+            - aarch64
+      runAfter:
+        - build-aarch64
+        - run-tests
+      taskRef:
+        kind: Task
+        name: buildah-push
+      workspaces:
+        - name: oci-images
+          workspace: oci-images
+        - name: dockerconfig
+          workspace: registry-token
+    - name: run-tests
+      params:
+        - name: BASE_IMAGE
+          value: $(params.image-name)
+        - name: VERBOSE
+          value: 'true'
+        - name: PATH
+          value: ''
+        - name: COMMAND
+          value: curl localhost
+      runAfter:
+        - build-x86-64
+      taskRef:
+        kind: Task
+        name: run-tests
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
+        - name: oci-images
+          workspace: oci-images
+  workspaces:
+    - name: source-workspace
+    - name: oci-images
+    - name: registry-token
+

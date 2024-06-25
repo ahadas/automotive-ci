@@ -16,3 +16,7 @@
     k8s:
       state: present
       definition: "{{ lookup('template', 'nightly-build.yml.j2') }}"
+  - name: "Apply pipeline"
+    k8s:
+      state: present
+      definition: "{{ lookup('template', 'pipeline.yml.j2') }}"
