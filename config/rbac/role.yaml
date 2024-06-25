@@ -66,6 +66,7 @@ rules:
       - tekton.dev
     resources:
       - pipelines
+      - tasks
     verbs:
       - create
       - get

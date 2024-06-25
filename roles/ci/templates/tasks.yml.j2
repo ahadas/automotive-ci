@@ -1,0 +1,179 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: buildah-build
+  namespace: autosd-ci-operator-system
+spec:
+  params:
+    - default: .
+      name: context-dir
+      type: string
+    - default: Containerfile
+      name: containerfile-path
+      type: string
+  steps:
+    - computeResources: {}
+      env:
+        - name: STORAGE_DRIVER
+          value: vfs
+      image: 'registry.redhat.io/rhel8/buildah:8.9'
+      name: build
+      script: |
+        #!/bin/bash
+        set -Eeuo pipefail
+        buildah bud -t localhost/image:$(uname -m) -f $(workspaces.source-workspace.path)/$(params.containerfile-path) $(workspaces.source-workspace.path)/$(params.context-dir)
+        buildah push localhost/image:$(uname -m) oci-archive:/srv/oci-images/$(uname -m).tar
+      securityContext:
+        capabilities:
+          add:
+            - SETFCAP
+      volumeMounts:
+        - mountPath: /var/lib/containers
+          name: container-storage
+  volumes:
+    - emptyDir: {}
+      name: container-storage
+  workspaces:
+    - description: Workspace containing source code
+      name: source-workspace
+    - mountPath: /srv/oci-images
+      name: oci-images
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: buildah-push
+  namespace: autosd-ci-operator-system
+spec:
+  params:
+    - name: image-name
+      type: string
+    - name: architectures
+      type: array
+  steps:
+    - args:
+        - '$(params.architectures[*])'
+      computeResources: {}
+      env:
+        - name: STORAGE_DRIVER
+          value: vfs
+      image: 'registry.redhat.io/rhel8/buildah:8.9'
+      name: push
+      script: |
+        #!/bin/bash
+        set -Eeuo pipefail
+
+        # Handle registry credentials
+        if [[ "$(workspaces.dockerconfig.bound)" == "true" ]]; then
+          if test -f "$(workspaces.dockerconfig.path)/config.json"; then
+            export DOCKER_CONFIG="$(workspaces.dockerconfig.path)"
+          elif test -f "$(workspaces.dockerconfig.path)/.dockerconfigjson"; then
+            mkdir -p $HOME/.docker
+            cp "$(workspaces.dockerconfig.path)/.dockerconfigjson" "$HOME/.docker/config.json"
+            export DOCKER_CONFIG="$HOME/.docker"
+          else
+            echo "neither 'config.json' nor '.dockerconfigjson' found at workspace root"
+            exit 1
+          fi
+        fi
+
+        declare -a iids=()
+        for arch; do
+          echo "Loading image for architecture $arch..."
+          iid=$(buildah pull oci-archive:/srv/oci-images/$arch.tar)
+          iids+=("$iid")
+        done
+        buildah manifest create localhost/multi-arch-image "${iids[@]}"
+        buildah manifest push --all localhost/multi-arch-image docker://$(params.image-name)
+      securityContext:
+        capabilities:
+          add:
+            - SETFCAP
+      volumeMounts:
+        - mountPath: /var/lib/containers
+          name: container-storage
+  volumes:
+    - emptyDir: {}
+      name: container-storage
+  workspaces:
+    - mountPath: /srv/oci-images
+      name: oci-images
+    - description: An optional workspace that allows providing a .docker/config.json file for Buildah to access the container registry. The file should be placed at the root of the Workspace with name config.json or .dockerconfigjson.
+      name: dockerconfig
+      optional: true
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: run-tests
+  namespace: autosd-ci-operator-system
+spec:
+  description: This task perform the unit test operation
+  params:
+    - default: 'fedora:40'
+      description: |
+        The base image for the task.
+      name: BASE_IMAGE
+      type: string
+    - default: 'true'
+      description: Log the commands that are executed during the operation.
+      name: VERBOSE
+      type: string
+    - default: ''
+      description: The path in source to the tests
+      name: PATH
+      type: string
+    - description: The command to run the tests
+      name: COMMAND
+      type: string
+  sidecars:
+    - computeResources: {}
+      image: $(params.BASE_IMAGE)
+      name: hello-sidecar
+      volumeMounts:
+        - mountPath: $(workspaces.source-workspace.path)
+          name: $(workspaces.source-workspace.volume)
+  steps:
+    - computeResources: {}
+      env:
+        - name: PARAM_VERBOSE
+          value: $(params.VERBOSE)
+        - name: PARAM_PATH
+          value: $(params.PATH)
+        - name: PARAM_COMMAND
+          value: $(params.COMMAND)
+      image: $(params.BASE_IMAGE)
+      name: unit-test
+      script: |
+        #!/usr/bin/env sh
+        set -eu
+
+        if [ "${PARAM_VERBOSE}" = "true" ] ; then
+          set -x
+        fi
+
+        ls -l /srv/oci-images/
+
+        #if ! [ -f "${PARAM_PATH}" ]; then
+        #  echo "${PARAM_PATH} does not exist. Skipping tests"
+        #  exit
+        #fi
+
+        echo "Running tests"
+        #RESULT="$("${PARAM_PATH}" "${PARAM_COMMAND}")"
+        RESULT=$(${PARAM_COMMAND})
+        EXIT_CODE="$?"
+        if [ "${EXIT_CODE}" != 0 ] ; then
+          echo "Tests failed."
+          exit "${EXIT_CODE}"
+        fi
+        echo "Tests passed."
+
+        sleep 1
+      workingDir: $(workspaces.source-workspace.path)
+  workspaces:
+    - description: A workspace that contains the fetched git repository.
+      name: source-workspace
+    - mountPath: /srv/oci-images
+      name: oci-images
