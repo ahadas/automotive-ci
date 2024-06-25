@@ -1,0 +1,57 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: ci
+  namespace: autosd-ci-operator-system
+spec:
+  params:
+  - name: git-url
+    description: The git repository url
+  - name: image-name
+    description: bla bla bla
+
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1
+    kind: PipelineRun
+    metadata:
+      generateName: ci-pipeline-
+    spec:
+      pipelineRef:
+        name: ci
+      params:
+      - name: image-name
+        value: name
+      - name: git-url
+        value: $(tt.params.git-url)
+      - name: IMAGE
+        value: image-registry.openshift-image-registry.svc:5000/pipelines-tutorial/abc
+      workspaces:
+        - name: source-workspace
+          volumeClaimTemplate:
+            metadata:
+              creationTimestamp: null
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi
+              storageClassName: efs-sc
+              volumeMode: Filesystem
+            status: {}
+        - name: oci-images
+          volumeClaimTemplate:
+            metadata:
+              creationTimestamp: null
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi
+              storageClassName: efs-sc
+              volumeMode: Filesystem
+            status: {}
+        - name: registry-token
+          secret:
+            secretName: quay-authentication

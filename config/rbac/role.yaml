@@ -52,6 +52,9 @@ rules:
       - triggers.tekton.dev
     resources:
       - eventlisteners
+      - triggerbindings
+      - triggers
+      - triggertemplates
     verbs:
       - create
       - get

@@ -1,0 +1,11 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: ci
+  namespace: autosd-ci-operator-system
+spec:
+  params:
+  - name: git-url
+    value: {{ git_url }}
+  - name: image-name
+    value: {{ image_name }}
