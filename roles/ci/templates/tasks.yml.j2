@@ -106,6 +106,69 @@ spec:
 apiVersion: tekton.dev/v1
 kind: Task
 metadata:
+  name: buildah-push-local
+  namespace: autosd-ci-operator-system
+spec:
+  params:
+    - name: local-image
+      type: string
+    - name: architectures
+      type: array
+  steps:
+    - args:
+        - '$(params.architectures[*])'
+      computeResources: {}
+      env:
+        - name: STORAGE_DRIVER
+          value: vfs
+      image: 'registry.redhat.io/rhel8/buildah:8.9'
+      name: push
+      script: |
+        #!/bin/bash
+        set -Eeuo pipefail
+
+        # Handle registry credentials
+        if [[ "$(workspaces.dockerconfig.bound)" == "true" ]]; then
+          if test -f "$(workspaces.dockerconfig.path)/config.json"; then
+            export DOCKER_CONFIG="$(workspaces.dockerconfig.path)"
+          elif test -f "$(workspaces.dockerconfig.path)/.dockerconfigjson"; then
+            mkdir -p $HOME/.docker
+            cp "$(workspaces.dockerconfig.path)/.dockerconfigjson" "$HOME/.docker/config.json"
+            export DOCKER_CONFIG="$HOME/.docker"
+          else
+            echo "neither 'config.json' nor '.dockerconfigjson' found at workspace root"
+            exit 1
+          fi
+        fi
+
+        declare -a iids=()
+        for arch; do
+          echo "Loading image for architecture $arch..."
+          iid=$(buildah pull oci-archive:/srv/oci-images/$arch.tar)
+          iids+=("$iid")
+        done
+        buildah manifest create localhost/multi-arch-image "${iids[@]}"
+        buildah manifest push --all localhost/multi-arch-image docker://$(params.local-image)
+      securityContext:
+        capabilities:
+          add:
+            - SETFCAP
+      volumeMounts:
+        - mountPath: /var/lib/containers
+          name: container-storage
+  volumes:
+    - emptyDir: {}
+      name: container-storage
+  workspaces:
+    - mountPath: /srv/oci-images
+      name: oci-images
+    - description: An optional workspace that allows providing a .docker/config.json file for Buildah to access the container registry. The file should be placed at the root of the Workspace with name config.json or .dockerconfigjson.
+      name: dockerconfig
+      optional: true
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
   name: run-tests
   namespace: autosd-ci-operator-system
 spec:
@@ -114,7 +177,7 @@ spec:
     - default: 'fedora:40'
       description: |
         The base image for the task.
-      name: BASE_IMAGE
+      name: local-image
       type: string
     - default: 'true'
       description: Log the commands that are executed during the operation.
@@ -127,9 +190,13 @@ spec:
     - description: The command to run the tests
       name: COMMAND
       type: string
+    - default: ''
+      description: The args to the command
+      name: ARGS
+      type: string
   sidecars:
     - computeResources: {}
-      image: $(params.BASE_IMAGE)
+      image: $(params.local-image)
       name: hello-sidecar
       volumeMounts:
         - mountPath: $(workspaces.source-workspace.path)
@@ -143,7 +210,9 @@ spec:
           value: $(params.PATH)
         - name: PARAM_COMMAND
           value: $(params.COMMAND)
-      image: $(params.BASE_IMAGE)
+        - name: PARAM_ARGS
+          value: $(params.ARGS)
+      image: $(params.local-image)
       name: unit-test
       script: |
         #!/usr/bin/env sh
@@ -153,16 +222,15 @@ spec:
           set -x
         fi
 
-        ls -l /srv/oci-images/
-
-        #if ! [ -f "${PARAM_PATH}" ]; then
-        #  echo "${PARAM_PATH} does not exist. Skipping tests"
-        #  exit
-        #fi
+        if ! [ -f "${PARAM_PATH}" ]; then
+          echo "${PARAM_PATH} does not exist. Skipping tests"
+          exit
+        fi
 
         echo "Running tests"
-        #RESULT="$("${PARAM_PATH}" "${PARAM_COMMAND}")"
-        RESULT=$(${PARAM_COMMAND})
+        #RESULT=$(${PARAM_COMMAND} ${PARAM_PATH} ${PARAM_ARGS})
+        #RESULT=$(${PARAM_COMMAND})
+        ${PARAM_COMMAND} ${PARAM_PATH} ${PARAM_ARGS}
         EXIT_CODE="$?"
         if [ "${EXIT_CODE}" != 0 ] ; then
           echo "Tests failed."
@@ -184,31 +252,40 @@ metadata:
   name: send-notification
   namespace: autosd-ci-operator-system
 spec:
-  params: []
+  params:
+    - name: aggregateTasksStatus
+      type: string
   steps:
     - computeResources: {}
       env:
         - name: JSONTEMPLATE
-          value: '{"api_key": "API_KEY", "to": ["Arik <ahadas@redhat.com>"], "sender": "Arik Hadas <ahadas@redhat.com>", "subject": "Hello Arik", "text_body": "test", "html_body": "<h1>test</h1>"}'
+          value: '{"api_key": "API_KEY", "to": ["Arik <ahadas@redhat.com>"], "sender": "Arik Hadas <ahadas@redhat.com>", "subject": "Hello Arik", "text_body": "RESULT", "html_body": "<h1>test</h1>"}'
         - name: API_KEY
           valueFrom:
             secretKeyRef:
-              name: smtp-secret
               key: api.key
+              name: smtp-secret
       image: 'quay.io/centos/centos:stream9'
       name: send-email
       script: |
         #!/bin/bash
         set -Eeuo pipefail
 
-        _jsondata=$(echo -n ${JSONTEMPLATE} | sed -e "s/API_KEY/$API_KEY/")
+        if [ $(params.aggregateTasksStatus) == "Failed" ]
+        then
+          echo "Looks like one or more tasks returned failure"
+        fi
+        if [ $(params.aggregateTasksStatus) == "Succeeded" ]
+        then
+          echo "Pipeline succeeded"
+        fi
+
+        _jsondata=$(echo -n ${JSONTEMPLATE} | sed -e "s/API_KEY/$API_KEY/" | sed -e "s/RESULT/$(params.aggregateTasksStatus)/")
         curl -X POST -H 'Content-Type: appcation/json'  -d "${_jsondata}"  https://api.smtp2go.com/v3/email/send -v
       securityContext:
         capabilities:
           add:
             - SETFCAP
-      volumeMounts: []
   volumes:
     - emptyDir: {}
       name: container-storage
-  workspaces: []

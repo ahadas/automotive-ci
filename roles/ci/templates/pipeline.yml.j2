@@ -4,6 +4,14 @@ metadata:
   name: ci
   namespace: autosd-ci-operator-system
 spec:
+  finally:
+    - name: send-notification
+      params:
+        - name: aggregateTasksStatus
+          value: $(tasks.status)
+      taskRef:
+        kind: Task
+        name: send-notification
   params:
     - name: git-url
       type: string
@@ -17,6 +25,8 @@ spec:
       type: string
     - default: Containerfile
       name: containerfile-path
+      type: string
+    - name: local-image
       type: string
   tasks:
     - name: clone-repo
@@ -72,8 +82,8 @@ spec:
             - x86_64
             - aarch64
       runAfter:
-        - build-aarch64
-        - run-tests
+        - run-tests-x86-64
+        - run-tests-aarch64
       taskRef:
         kind: Task
         name: buildah-push
@@ -82,18 +92,20 @@ spec:
           workspace: oci-images
         - name: dockerconfig
           workspace: registry-token
-    - name: run-tests
+    - name: run-tests-x86-64
       params:
         - name: BASE_IMAGE
           value: $(params.image-name)
         - name: VERBOSE
           value: 'true'
         - name: PATH
-          value: ''
+          value: $(workspaces.source-workspace.path)/test
         - name: COMMAND
-          value: curl localhost
+          value: bash
+        - name: local-image
+          value: $(params.local-image)
       runAfter:
-        - build-x86-64
+        - buildah-push-local
       taskRef:
         kind: Task
         name: run-tests
@@ -102,8 +114,48 @@ spec:
           workspace: source-workspace
         - name: oci-images
           workspace: oci-images
+    - name: run-tests-aarch64
+      params:
+        - name: BASE_IMAGE
+          value: $(params.image-name)
+        - name: VERBOSE
+          value: 'true'
+        - name: PATH
+          value: $(workspaces.source-workspace.path)/test
+        - name: COMMAND
+          value: bash
+        - name: local-image
+          value: $(params.local-image)
+      runAfter:
+        - buildah-push-local
+      taskRef:
+        kind: Task
+        name: run-tests
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
+        - name: oci-images
+          workspace: oci-images
+    - name: buildah-push-local
+      params:
+        - name: local-image
+          value: $(params.local-image)
+        - name: architectures
+          value:
+            - x86_64
+            - aarch64
+      runAfter:
+        - build-x86-64
+        - build-aarch64
+      taskRef:
+        kind: Task
+        name: buildah-push-local
+      workspaces:
+        - name: oci-images
+          workspace: oci-images
+        - name: dockerconfig
+          workspace: registry-token
   workspaces:
     - name: source-workspace
     - name: oci-images
     - name: registry-token
-
