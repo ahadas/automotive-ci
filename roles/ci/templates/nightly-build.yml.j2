@@ -24,7 +24,7 @@ spec:
                   value: '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}'
               imagePullPolicy: Always
               terminationMessagePolicy: File
-              image: 'registry.redhat.io/rhel8/toolbox:latest'
+              image: 'quay.io/centos/centos:stream9'
               args:
                 - '-c'
                 - |
