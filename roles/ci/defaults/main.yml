@@ -1,3 +1,4 @@
 ---
-smtp_api_key: ""
+smtp_secret: smtp-secret
+smtp_api_key: 'api.key'
 quay_creds: ""

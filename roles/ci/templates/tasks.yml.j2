@@ -259,7 +259,7 @@ spec:
     - computeResources: {}
       env:
         - name: JSONTEMPLATE
-          value: '{"api_key": "API_KEY", "to": ["Arik <ahadas@redhat.com>"], "sender": "Arik Hadas <ahadas@redhat.com>", "subject": "Hello Arik", "text_body": "RESULT", "html_body": "<h1>test</h1>"}'
+          value: '{"{{ smtp_api_key }}": "API_KEY", "to": ["Arik <ahadas@redhat.com>"], "sender": "Arik Hadas <ahadas@redhat.com>", "subject": "Hello Arik", "text_body": "RESULT", "html_body": "<h1>test</h1>"}'
         - name: API_KEY
           valueFrom:
             secretKeyRef:
