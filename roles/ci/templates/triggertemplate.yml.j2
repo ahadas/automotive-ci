@@ -39,7 +39,7 @@ spec:
       - name: context-dir
         value: $(tt.params.context-dir)
       - name: containerfile-path
-        value: $(tt.params.containerfile)
+        value: $(tt.params.containerfile-path)
       taskRunSpecs:
         - pipelineTaskName: build-x86-64
           podTemplate:
@@ -86,4 +86,4 @@ spec:
             status: {}
         - name: registry-token
           secret:
-            secretName: quay-authentication
+            secretName: {{ quay_secret }}

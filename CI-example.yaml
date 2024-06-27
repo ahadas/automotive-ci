@@ -1,0 +1,13 @@
+apiVersion: automotive.sig.centos.org/v1
+kind: CI
+metadata:
+  name: example
+  namespace: autosd-ci-operator-system
+spec:
+  git_url: https://gitlab.com/lrotenbe/automotive-osbuild.git
+  git_revision: test
+  image_name: quay.io/lrotenbe/automotive-osbuild
+  local_image: quay.io/lrotenbe/automotive-osbuild:test
+  context_dir: .
+  containerfile: Containerfile
+  storageclass: efs-sc
