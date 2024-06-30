@@ -1,5 +1,5 @@
 ---
-- name: Create the automotive.sig.centos.org/v1.CI
+- name: Create the automotive.sig.centos.org/v1.ContainerBuild
   k8s:
     state: present
     namespace: '{{ namespace }}'

@@ -2,20 +2,20 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: cis.automotive.sig.centos.org
+  name: cbs.automotive.sig.centos.org
 spec:
   group: automotive.sig.centos.org
   names:
-    kind: CI
-    listKind: CIList
-    plural: cis
-    singular: ci
+    kind: ContainerBuild
+    listKind: ContainerBuilds
+    plural: cbs
+    singular: cb
   scope: Namespaced
   versions:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: CI is the Schema for the cis API
+        description: ContainerBuild is the Schema for the cbs API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -30,11 +30,11 @@ spec:
           metadata:
             type: object
           spec:
-            description: Spec defines the desired state of CI
+            description: Spec defines the desired state of ContainerBuild
             type: object
             x-kubernetes-preserve-unknown-fields: true
           status:
-            description: Status defines the observed state of CI
+            description: Status defines the observed state of ContainerBuild
             type: object
             x-kubernetes-preserve-unknown-fields: true
         type: object

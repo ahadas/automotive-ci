@@ -2,6 +2,6 @@
 # Use the 'create api' subcommand to add watches to this file.
 - version: v1
   group: automotive.sig.centos.org
-  kind: CI
+  kind: ContainerBuild
   role: ci
 #+kubebuilder:scaffold:watch

@@ -11,6 +11,6 @@ resources:
     namespaced: true
   domain: centos.org
   group: automotive.sig
-  kind: CI
+  kind: ContainerBuild
   version: v1
 version: "3"
