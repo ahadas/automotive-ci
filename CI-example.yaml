@@ -1,5 +1,5 @@
 apiVersion: automotive.sig.centos.org/v1
-kind: CI
+kind: ContainerBuild
 metadata:
   name: example
   namespace: autosd-ci-operator-system

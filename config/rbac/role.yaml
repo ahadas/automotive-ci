@@ -75,7 +75,7 @@ rules:
       - watch
       - patch
   ##
-  ## Rules for automotive.sig.centos.org/v1, Kind: CI
+  ## Rules for automotive.sig.centos.org/v1, Kind: ContainerBuild
   ##
   - apiGroups:
       - automotive.sig.centos.org
