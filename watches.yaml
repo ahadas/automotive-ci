@@ -3,5 +3,5 @@
 - version: v1
   group: automotive.sig.centos.org
   kind: ContainerBuild
-  role: ci
+  role: containerbuild
 #+kubebuilder:scaffold:watch

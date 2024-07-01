@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
   name: ci
-  namespace: autosd-ci-operator-system
+  namespace: autosd-cb-operator-system
 spec:
   finally:
     - name: send-notification

@@ -10,7 +10,7 @@
       type: Successful
       status: "True"
   vars:
-    cr_file: 'automotive.sig_v1_ci.yaml'
+    cr_file: 'automotive.sig_v1_cb.yaml'
 
 - name: Add assertions here
   assert:

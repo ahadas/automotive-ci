@@ -1,20 +1,24 @@
-# permissions for end users to view cis.
+# permissions for end users to edit cbs.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: ci-viewer-role
+  name: cb-editor-role
 rules:
 - apiGroups:
   - automotive.sig.centos.org
   resources:
-  - cis
+  - cbs
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
 - apiGroups:
   - automotive.sig.centos.org
   resources:
-  - cis/status
+  - cbs/status
   verbs:
   - get

@@ -80,9 +80,9 @@ rules:
   - apiGroups:
       - automotive.sig.centos.org
     resources:
-      - cis
-      - cis/status
-      - cis/finalizers
+      - cbs
+      - cbs/status
+      - cbs/finalizers
     verbs:
       - create
       - delete

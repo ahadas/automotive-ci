@@ -38,7 +38,7 @@ spec:
       containers:
       - args:
         - --leader-elect
-        - --leader-election-id=autosd-ci-operator
+        - --leader-election-id=autosd-cb-operator
         image: controller:latest
         name: manager
         env:

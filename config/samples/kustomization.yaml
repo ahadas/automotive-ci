@@ -1,4 +1,4 @@
 ## Append samples you want in your CSV to this file as resources ##
 resources:
-- automotive.sig_v1_ci.yaml
+- automotive.sig_v1_cb.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

@@ -2,7 +2,7 @@ kind: CronJob
 apiVersion: batch/v1
 metadata:
   name: nightly-build
-  namespace: autosd-ci-operator-system
+  namespace: autosd-cb-operator-system
 spec:
   schedule: '@midnight'
   concurrencyPolicy: Allow
@@ -30,7 +30,7 @@ spec:
                 - |
                   set -eu
 
-                  curl -s -X POST -H 'Content-Type: application/json' -H 'X-GitHub-Event: push' -d '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}' http://el-ci-event-listener.autosd-ci-operator-system.svc:8080
+                  curl -s -X POST -H 'Content-Type: application/json' -H 'X-GitHub-Event: push' -d '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}' http://el-ci-event-listener.autosd-cb-operator-system.svc:8080
           restartPolicy: Never
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
