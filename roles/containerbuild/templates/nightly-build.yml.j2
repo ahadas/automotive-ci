@@ -1,7 +1,7 @@
 kind: CronJob
 apiVersion: batch/v1
 metadata:
-  name: nightly-build
+  name: {{ pipeline_name }}-nightly-build
   namespace: {{ namespace }}
 spec:
   schedule: '@midnight'
