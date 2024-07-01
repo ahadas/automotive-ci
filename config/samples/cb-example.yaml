@@ -11,3 +11,7 @@ spec:
   context_dir: .
   containerfile: Containerfile
   storageclass: efs-sc
+  pipeline_name: liran
+  test_path: /workspace/source-workspace/test
+  test_command: bash
+  namespace: autosd-cb-operator-system

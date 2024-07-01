@@ -1,8 +1,8 @@
 apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
-  name: ci
-  namespace: autosd-cb-operator-system
+  name: {{ pipeline_name }}
+  namespace: {{ namespace }}
 spec:
   finally:
     - name: send-notification
@@ -27,6 +27,10 @@ spec:
       name: containerfile-path
       type: string
     - name: local-image
+      type: string
+    - name: test-path
+      type: string
+    - name: test-command
       type: string
   tasks:
     - name: clone-repo
@@ -99,9 +103,9 @@ spec:
         - name: VERBOSE
           value: 'true'
         - name: PATH
-          value: $(workspaces.source-workspace.path)/test
+          value: $(params.test-path)
         - name: COMMAND
-          value: bash
+          value: $(params.test-command)
         - name: local-image
           value: $(params.local-image)
       runAfter:
@@ -121,9 +125,9 @@ spec:
         - name: VERBOSE
           value: 'true'
         - name: PATH
-          value: $(workspaces.source-workspace.path)/test
+          value: $(params.test-path)
         - name: COMMAND
-          value: bash
+          value: $(params.test-command)
         - name: local-image
           value: $(params.local-image)
       runAfter:

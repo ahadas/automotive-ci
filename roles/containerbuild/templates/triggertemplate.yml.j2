@@ -1,8 +1,8 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: ci
-  namespace: autosd-cb-operator-system
+  name: {{ pipeline_name }}
+  namespace: {{ namespace }}
 spec:
   params:
   - name: git-url
@@ -19,14 +19,18 @@ spec:
     description: The conatiner file to use
   - name: storageclass
     description: The storage class to use for workspaces
+  - name: test-path
+    description: The path to execute the tests on
+  - name: test-command
+    description: The command to run in order to trigger the tests
   resourcetemplates:
   - apiVersion: tekton.dev/v1
     kind: PipelineRun
     metadata:
-      generateName: ci-pipeline-
+      generateName: {{ pipeline_name }}-pipeline-
     spec:
       pipelineRef:
-        name: ci
+        name: {{ pipeline_name }}
       params:
       - name: git-url
         value: $(tt.params.git-url)
@@ -40,6 +44,10 @@ spec:
         value: $(tt.params.context-dir)
       - name: containerfile-path
         value: $(tt.params.containerfile-path)
+      - name: test-path
+        value: $(tt.params.test-path)
+      - name: test-command
+        value: $(tt.params.test-command)
       taskRunSpecs:
         - pipelineTaskName: build-x86-64
           podTemplate:

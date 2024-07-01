@@ -1,8 +1,8 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
-  name: ci
-  namespace: autosd-cb-operator-system
+  name: {{ pipeline_name }}
+  namespace: {{ namespace }}
 spec:
   params:
   - name: git-url
@@ -19,3 +19,7 @@ spec:
     value: {{ containerfile }}
   - name: storageclass
     value: {{ storageclass }}
+  - name: test-path
+    value: {{ test_path }}
+  - name: test-command
+    value: {{ test_command }}

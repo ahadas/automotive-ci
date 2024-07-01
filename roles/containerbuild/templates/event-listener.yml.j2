@@ -1,9 +1,9 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: ci-event-listener
-  namespace: autosd-cb-operator-system
+  name: {{ pipeline_name }}-event-listener
+  namespace: {{ namespace }}
 spec:
   serviceAccountName: pipeline
   triggers:
-    - triggerRef: ci
+    - triggerRef: {{ pipeline_name }}

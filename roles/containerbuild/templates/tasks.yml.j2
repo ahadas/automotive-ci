@@ -3,7 +3,7 @@ apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: buildah-build
-  namespace: autosd-cb-operator-system
+  namespace: {{ namespace }}
 spec:
   params:
     - default: .
@@ -44,7 +44,7 @@ apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: buildah-push
-  namespace: autosd-cb-operator-system
+  namespace: {{ namespace }}
 spec:
   params:
     - name: image-name
@@ -107,7 +107,7 @@ apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: buildah-push-local
-  namespace: autosd-cb-operator-system
+  namespace: {{ namespace }}
 spec:
   params:
     - name: local-image
@@ -170,7 +170,7 @@ apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: run-tests
-  namespace: autosd-cb-operator-system
+  namespace: {{ namespace }}
 spec:
   description: This task perform the unit test operation
   params:
@@ -250,7 +250,7 @@ apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: send-notification
-  namespace: autosd-cb-operator-system
+  namespace: {{ namespace }}
 spec:
   params:
     - name: aggregateTasksStatus

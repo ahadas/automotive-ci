@@ -1,12 +1,12 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: Trigger
 metadata:
-  name: ci
-  namespace: autosd-cb-operator-system
+  name: {{ pipeline_name }}
+  namespace: {{ namespace }}
 spec:
   serviceAccountName: pipeline
   bindings:
-    - ref: ci
+    - ref: {{ pipeline_name }}
   template:
-    ref: ci
+    ref: {{ pipeline_name }}
 
