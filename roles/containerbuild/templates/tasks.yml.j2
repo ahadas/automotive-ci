@@ -12,6 +12,9 @@ spec:
     - default: Containerfile
       name: containerfile-path
       type: string
+    - default: ''
+      name: build-args
+      type: string
   steps:
     - computeResources: {}
       env:
@@ -22,7 +25,7 @@ spec:
       script: |
         #!/bin/bash
         set -Eeuo pipefail
-        buildah bud -t localhost/image:$(uname -m) -f $(workspaces.source-workspace.path)/$(params.containerfile-path) $(workspaces.source-workspace.path)/$(params.context-dir)
+        buildah bud $(params.build-args) -t localhost/image:$(uname -m) -f $(workspaces.source-workspace.path)/$(params.containerfile-path) $(workspaces.source-workspace.path)/$(params.context-dir)
         buildah push localhost/image:$(uname -m) oci-archive:/srv/oci-images/$(uname -m).tar
       securityContext:
         capabilities:

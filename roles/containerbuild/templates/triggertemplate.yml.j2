@@ -17,6 +17,8 @@ spec:
     description: The path in the repository to use
   - name: containerfile-path
     description: The conatiner file to use
+  - name: build-args
+    description: Extra build arguments
   - name: storageclass
     description: The storage class to use for workspaces
   - name: test-path
@@ -44,6 +46,8 @@ spec:
         value: $(tt.params.context-dir)
       - name: containerfile-path
         value: $(tt.params.containerfile-path)
+      - name: build-args
+        value: $(tt.params.build-args)
       - name: test-path
         value: $(tt.params.test-path)
       - name: test-command

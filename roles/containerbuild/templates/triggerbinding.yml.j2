@@ -7,16 +7,25 @@ spec:
   params:
   - name: git-url
     value: {{ git_url }}
+{% if git_revision is defined %}
   - name: git-revision
     value: {{ git_revision }}
+{% endif %}
   - name: image-name
     value: {{ image_name }}
   - name: local-image
     value: {{ local_image }}
+{% if context_dir is defined %}
   - name: context-dir
     value: {{ context_dir }}
+{% endif %}
+{% if containerfile is defined %}
   - name: containerfile-path
     value: {{ containerfile }}
+{% if build_args is defined %}
+  - name: build-args
+    value: {{ build_args }}
+{% endif %}
   - name: storageclass
     value: {{ storageclass }}
   - name: test-path

@@ -26,6 +26,9 @@ spec:
     - default: Containerfile
       name: containerfile-path
       type: string
+    - default: ''
+      name: build-args
+      type: string
     - name: local-image
       type: string
     - name: test-path
@@ -51,6 +54,8 @@ spec:
           value: $(params.context-dir)
         - name: containerfile-path
           value: $(params.containerfile-path)
+        - name: build-args
+          value: $(params.build-args)
       runAfter:
         - clone-repo
       taskRef:
@@ -67,6 +72,8 @@ spec:
           value: $(params.context-dir)
         - name: containerfile-path
           value: $(params.containerfile-path)
+        - name: build-args
+          value: $(params.build-args)
       runAfter:
         - clone-repo
       taskRef:
