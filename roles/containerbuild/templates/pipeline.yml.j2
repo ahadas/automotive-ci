@@ -4,6 +4,7 @@ metadata:
   name: {{ pipeline_name }}
   namespace: {{ namespace }}
 spec:
+{% if notify_email %}
   finally:
     - name: send-notification
       params:
@@ -12,6 +13,7 @@ spec:
       taskRef:
         kind: Task
         name: send-notification
+{% endif %}
   params:
     - name: git-url
       type: string
@@ -93,8 +95,13 @@ spec:
             - x86_64
             - aarch64
       runAfter:
+{% if tests %}
         - run-tests-x86-64
         - run-tests-aarch64
+{% else %}
+        - build-x86-64
+        - build-aarch64
+{% endif %}
       taskRef:
         kind: Task
         name: buildah-push
@@ -103,6 +110,7 @@ spec:
           workspace: oci-images
         - name: dockerconfig
           workspace: registry-token
+{% if tests %}
     - name: run-tests-x86-64
       params:
         - name: BASE_IMAGE
@@ -166,6 +174,7 @@ spec:
           workspace: oci-images
         - name: dockerconfig
           workspace: registry-token
+{% endif %}
   workspaces:
     - name: source-workspace
     - name: oci-images

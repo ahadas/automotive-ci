@@ -1,0 +1,20 @@
+apiVersion: automotive.sig.centos.org/v1
+kind: ContainerBuild
+metadata:
+  name: autosd
+  namespace: autosd-cb-operator-system
+spec:
+  git_url: 'https://gitlab.com/CentOS/automotive/container-images/autosd.git'
+  local_image: 'quay.io/container-ci-test/autosd:test'
+  git_revision: main
+  pipeline_name: autosd-ci
+  build_args: '--cap-add=sys_admin'
+  image_name: quay.io/container-ci-test/autosd
+  test_path: /workspace/source-workspace/Makefile
+  namespace: autosd-cb-operator-system
+  containerfile: Containerfile
+  context_dir: .
+  storageclass: efs-sc
+  test_command: cat
+  tests: False
+  notify_email: false

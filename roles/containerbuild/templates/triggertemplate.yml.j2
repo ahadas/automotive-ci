@@ -61,6 +61,7 @@ spec:
           podTemplate:
             nodeSelector:
               kubernetes.io/arch: arm64
+{% if tests %}
         - pipelineTaskName: run-tests-x86-64
           podTemplate:
             nodeSelector:
@@ -69,6 +70,7 @@ spec:
           podTemplate:
             nodeSelector:
               kubernetes.io/arch: arm64
+{% endif %}
       workspaces:
         - name: source-workspace
           volumeClaimTemplate:
