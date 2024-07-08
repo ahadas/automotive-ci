@@ -1,0 +1,19 @@
+apiVersion: automotive.sig.centos.org/v1
+kind: ContainerBuild
+metadata:
+  name: eclipse-kuksa-val-server
+  namespace: autosd-cb-operator-system
+spec:
+  git_url: https://gitlab.com/CentOS/automotive/container-images/eclipse-kuksa-val-server.git
+  git_revision: main
+  image_name: quay.io/container-ci-test/eclipse-kuksa-val-server
+  local_image: quay.io/container-ci-test/eclipse-kuksa-val-server:test
+  context_dir: .
+  containerfile: Containerfile
+  storageclass: efs-sc
+  pipeline_name: eclipse-kuksa-val-server
+  test_path: /workspace/source-workspace/Makefile
+  test_command: cat
+  namespace: autosd-cb-operator-system
+  tests: False
+  notify_email: False
