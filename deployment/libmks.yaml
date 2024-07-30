@@ -14,6 +14,5 @@ spec:
   pipeline_name: libmks
   test_path: /workspace/source-workspace/Makefile
   test_command: cat
-  namespace: autosd-cb-operator-system
   tests: False
   notify_email: False

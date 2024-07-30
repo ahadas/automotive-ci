@@ -30,7 +30,7 @@ spec:
                 - |
                   set -eu
 
-                  curl -s -X POST -H 'Content-Type: application/json' -H 'X-GitHub-Event: push' -d '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}' http://el-{{ pipeline_name }}-event-listener.{{ namespace }}.svc:8080
+                  curl -s -X POST -H 'Content-Type: application/json' -H 'X-GitHub-Event: push' -d '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}' http://el-{{ pipeline_name }}-event-listener.{{ ansible_operator_meta.namespace }}.svc:8080
           restartPolicy: Never
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst

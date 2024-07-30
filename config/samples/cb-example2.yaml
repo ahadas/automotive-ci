@@ -14,4 +14,3 @@ spec:
   pipeline_name: autosd-buildbox-ci
   test_path: /workspace/source-workspace/Makefile
   test_command: cat
-  namespace: autosd-cb-operator-system

@@ -14,4 +14,3 @@ spec:
   pipeline_name: automotive-os-ci
   test_path: /workspace/source-workspace/test
   test_command: bash
-  namespace: autosd-cb-operator-system
