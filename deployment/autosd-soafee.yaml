@@ -7,7 +7,6 @@ spec:
   git_url: 'https://gitlab.com/CentOS/automotive/container-images/autosd-soafee.git'
   local_image: 'quay.io/container-ci-test/autosd-soafee:test'
   git_revision: main
-  pipeline_name: autosd-soafee
   build_args: '--cap-add=sys_admin'
   image_name: quay.io/container-ci-test/autosd-soafee
   test_path: /workspace/source-workspace/Makefile

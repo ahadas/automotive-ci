@@ -11,7 +11,6 @@ spec:
   context_dir: .
   containerfile: Containerfile
   storageclass: efs-sc
-  pipeline_name: cloud-publisher
   test_path: /workspace/source-workspace/Makefile
   test_command: cat
   tests: False

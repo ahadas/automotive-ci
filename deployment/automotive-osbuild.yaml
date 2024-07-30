@@ -11,7 +11,6 @@ spec:
   context_dir: .
   containerfile: Containerfile
   storageclass: efs-sc
-  pipeline_name: automotive-osbuild
   test_path: /workspace/source-workspace/test
   test_command: bash
   tests: False

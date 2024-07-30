@@ -1,9 +1,9 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: {{ pipeline_name }}-event-listener
+  name: {{ ansible_operator_meta.name }}
   namespace: {{ ansible_operator_meta.namespace }}
 spec:
   serviceAccountName: pipeline
   triggers:
-    - triggerRef: {{ pipeline_name }}
+    - triggerRef: {{ ansible_operator_meta.name }}

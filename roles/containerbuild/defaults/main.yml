@@ -2,7 +2,6 @@
 smtp_secret: smtp-secret
 smtp_api_key: 'api.key'
 quay_secret: quay-authentication
-pipeline_name: ci
 namespace: autosd-cb-operator-system
 tests: true
 notify_email: true

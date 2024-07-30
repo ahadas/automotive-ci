@@ -11,6 +11,5 @@ spec:
   context_dir: .
   containerfile: Containerfile
   storageclass: efs-sc
-  pipeline_name: autosd-buildbox-ci
   test_path: /workspace/source-workspace/Makefile
   test_command: cat
