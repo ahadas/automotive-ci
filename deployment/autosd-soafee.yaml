@@ -2,7 +2,7 @@ apiVersion: automotive.sig.centos.org/v1
 kind: ContainerBuild
 metadata:
   name: autosd-soafee
-  namespace: autosd-cb-operator-system
+  namespace: autosd
 spec:
   git_url: 'https://gitlab.com/CentOS/automotive/container-images/autosd-soafee.git'
   local_image: 'quay.io/container-ci-test/autosd-soafee:test'

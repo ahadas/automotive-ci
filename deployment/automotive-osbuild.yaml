@@ -2,7 +2,7 @@ apiVersion: automotive.sig.centos.org/v1
 kind: ContainerBuild
 metadata:
   name: automotive-osbuild
-  namespace: autosd-cb-operator-system
+  namespace: autosd
 spec:
   git_url: https://gitlab.com/CentOS/automotive/container-images/automotive-osbuild.git
   git_revision: test
