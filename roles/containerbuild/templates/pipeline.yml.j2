@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
   name: {{ pipeline_name }}
-  namespace: {{ namespace }}
+  namespace: {{ ansible_operator_meta.namespace }}
 spec:
 {% if notify_email %}
   finally:

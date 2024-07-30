@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
   name: {{ pipeline_name }}
-  namespace: {{ namespace }}
+  namespace: {{ ansible_operator_meta.namespace }}
 spec:
   params:
   - name: git-url

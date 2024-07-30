@@ -2,7 +2,7 @@ kind: CronJob
 apiVersion: batch/v1
 metadata:
   name: {{ pipeline_name }}-nightly-build
-  namespace: {{ namespace }}
+  namespace: {{ ansible_operator_meta.namespace }}
 spec:
   schedule: '@midnight'
   concurrencyPolicy: Allow

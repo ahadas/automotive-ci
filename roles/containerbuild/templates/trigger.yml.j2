@@ -2,7 +2,7 @@ apiVersion: triggers.tekton.dev/v1alpha1
 kind: Trigger
 metadata:
   name: {{ pipeline_name }}
-  namespace: {{ namespace }}
+  namespace: {{ ansible_operator_meta.namespace }}
 spec:
   serviceAccountName: pipeline
   bindings:

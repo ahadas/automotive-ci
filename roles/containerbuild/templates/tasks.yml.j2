@@ -3,7 +3,7 @@ apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: buildah-build
-  namespace: {{ namespace }}
+  namespace: {{ ansible_operator_meta.namespace }}
 spec:
   params:
     - default: .
