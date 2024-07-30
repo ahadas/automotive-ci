@@ -10,7 +10,6 @@ spec:
   local_image: quay.io/container-ci-test/eclipse-agemo:test
   context_dir: .
   containerfile: Containerfile
-  storageclass: efs-sc
   test_path: /workspace/source-workspace/Makefile
   test_command: cat
   tests: False

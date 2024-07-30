@@ -19,8 +19,6 @@ spec:
     description: The conatiner file to use
   - name: build-args
     description: Extra build arguments
-  - name: storageclass
-    description: The storage class to use for workspaces
   - name: test-path
     description: The path to execute the tests on
   - name: test-command
@@ -82,7 +80,9 @@ spec:
               resources:
                 requests:
                   storage: 1Gi
-              storageClassName: $(tt.params.storageclass)
+{% if storageclass is defined %}
+              storageClassName: {{ storageclass }}
+{% endif %}
               volumeMode: Filesystem
             status: {}
         - name: oci-images
@@ -95,7 +95,9 @@ spec:
               resources:
                 requests:
                   storage: 1Gi
-              storageClassName: $(tt.params.storageclass)
+{% if storageclass is defined %}
+              storageClassName: {{ storageclass }}
+{% endif %}
               volumeMode: Filesystem
             status: {}
         - name: registry-token

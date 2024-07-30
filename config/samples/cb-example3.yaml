@@ -12,7 +12,6 @@ spec:
   test_path: /workspace/source-workspace/Makefile
   containerfile: Containerfile
   context_dir: .
-  storageclass: efs-sc
   test_command: cat
   tests: False
   notify_email: false

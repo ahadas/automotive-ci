@@ -5,12 +5,11 @@ metadata:
   namespace: autosd
 spec:
   git_url: https://gitlab.com/CentOS/automotive/container-images/automotive-osbuild.git
-  git_revision: test
+  git_revision: main
   image_name: quay.io/container-ci-test/automotive-osbuild
   local_image: quay.io/container-ci-test/automotive-osbuild:test
   context_dir: .
   containerfile: Containerfile
-  storageclass: efs-sc
   test_path: /workspace/source-workspace/test
   test_command: bash
   tests: False
