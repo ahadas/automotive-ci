@@ -5,3 +5,4 @@ quay_secret: quay-authentication
 namespace: autosd-cb-operator-system
 tests: true
 notify_email: true
+build_args: ''

@@ -20,7 +20,7 @@ spec:
       env:
         - name: STORAGE_DRIVER
           value: vfs
-      image: 'registry.redhat.io/rhel8/buildah:8.9'
+      image: 'registry.redhat.io/rhel9/buildah:9.4'
       name: build
       script: |
         #!/bin/bash
@@ -61,7 +61,7 @@ spec:
       env:
         - name: STORAGE_DRIVER
           value: vfs
-      image: 'registry.redhat.io/rhel8/buildah:8.9'
+      image: 'registry.redhat.io/rhel9/buildah:9.4'
       name: push
       script: |
         #!/bin/bash
@@ -124,7 +124,7 @@ spec:
       env:
         - name: STORAGE_DRIVER
           value: vfs
-      image: 'registry.redhat.io/rhel8/buildah:8.9'
+      image: 'registry.redhat.io/rhel9/buildah:9.4'
       name: push
       script: |
         #!/bin/bash

@@ -1,0 +1,18 @@
+apiVersion: automotive.sig.centos.org/v1
+kind: ContainerBuild
+metadata:
+  name: autosd-eclipse
+  namespace: autosd-cb-operator-system
+spec:
+  git_url: 'https://gitlab.com/CentOS/automotive/container-images/autosd-eclipse.git'
+  local_image: 'quay.io/container-ci-test/autosd-eclipse:test'
+  git_revision: main
+  build_args: '--cap-add=sys_admin'
+  image_name: quay.io/container-ci-test/autosd-eclipse
+  test_path: /workspace/source-workspace/Makefile
+  containerfile: Containerfile
+  context_dir: .
+  test_command: cat
+  tests: False
+  notify_email: False
+

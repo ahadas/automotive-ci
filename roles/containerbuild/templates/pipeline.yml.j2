@@ -43,6 +43,7 @@ spec:
       type: string
   tasks:
     - name: clone-repo
+      retries: 3
       params:
         - name: url
           value: $(params.git-url)
