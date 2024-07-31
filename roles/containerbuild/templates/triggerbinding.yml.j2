@@ -5,6 +5,10 @@ metadata:
   namespace: {{ ansible_operator_meta.namespace }}
 spec:
   params:
+  - name: arm64
+    value: $(body.archs.arm64)
+  - name: amd64
+    value: $(body.archs.amd64)
   - name: git-url
     value: {{ git_url }}
 {% if git_revision is defined %}

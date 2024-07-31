@@ -37,6 +37,10 @@ spec:
       type: string
     - name: test-command
       type: string
+    - name: arm64
+      type: string
+    - name: amd64
+      type: string
   tasks:
     - name: clone-repo
       params:
@@ -51,6 +55,10 @@ spec:
         - name: output
           workspace: source-workspace
     - name: build-x86-64
+      when:
+        - input: $(params.amd64)
+          operator: in
+          values: ["true"]
       params:
         - name: context-dir
           value: $(params.context-dir)
@@ -69,6 +77,10 @@ spec:
         - name: oci-images
           workspace: oci-images
     - name: build-aarch64
+      when:
+        - input: $(params.arm64)
+          operator: in
+          values: ["true"]
       params:
         - name: context-dir
           value: $(params.context-dir)

@@ -5,6 +5,10 @@ metadata:
   namespace: {{ ansible_operator_meta.namespace }}
 spec:
   params:
+  - name: amd64
+    description: amd64
+  - name: arm64
+    description: arm64
   - name: git-url
     description: The git repository url
   - name: git-revision
@@ -50,6 +54,10 @@ spec:
         value: $(tt.params.test-path)
       - name: test-command
         value: $(tt.params.test-command)
+      - name: amd64
+        value: $(tt.params.amd64)
+      - name: arm64
+        value: $(tt.params.arm64)
       taskRunSpecs:
         - pipelineTaskName: build-x86-64
           podTemplate:
