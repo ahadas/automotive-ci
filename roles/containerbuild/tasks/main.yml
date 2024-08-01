@@ -8,10 +8,10 @@
     #k8s:
       #state: present
       #definition: "{{ lookup('template', 'quay-secret.yml.j2') }}"
-  - name: "Apply event-listener"
+  - name: "Apply nightly event-listener"
     k8s:
       state: present
-      definition: "{{ lookup('template', 'event-listener.yml.j2') }}"
+      definition: "{{ lookup('template', 'nightly-event-listener.yml.j2') }}"
   - name: "Apply nightly-build"
     k8s:
       state: present

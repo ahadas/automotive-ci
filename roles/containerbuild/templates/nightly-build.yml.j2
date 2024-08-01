@@ -1,7 +1,7 @@
 kind: CronJob
 apiVersion: batch/v1
 metadata:
-  name: {{ ansible_operator_meta.name }}
+  name: {{ ansible_operator_meta.name }}-nightly
   namespace: {{ ansible_operator_meta.namespace }}
 spec:
   schedule: '@midnight'
@@ -18,10 +18,6 @@ spec:
               command:
                 - /bin/sh
               env:
-                - name: EVENTLISTENERSVC
-                  value: 'http://el-vote-app-{{ ansible_operator_meta.name }}-test.apps.automotive1.ocp.automotive.sig.centos.org:8080'
-                - name: JSONTEMPLATE
-                  value: '{"object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}'
               imagePullPolicy: Always
               terminationMessagePolicy: File
               image: 'quay.io/centos/centos:stream9'
@@ -30,7 +26,7 @@ spec:
                 - |
                   set -eu
 
-                  curl -s -X POST -H 'Content-Type: application/json' -H 'X-GitHub-Event: push' -d '{"archs": {"amd64": "true", "arm64": "true"}, "object_kind": "push","event_name": "push","head_commit": {"id": "GITHUBREPOREV"},"repository": {"name": "GITHUBREPONAME","url": "GITHUBREPOURL"}}' http://el-{{ ansible_operator_meta.name }}.{{ ansible_operator_meta.namespace }}.svc:8080
+                  curl -s -X POST -H 'Content-Type: application/json' -d '{"archs": {"amd64": "true", "arm64": "true"}}' http://el-{{ ansible_operator_meta.name }}-nightly.{{ ansible_operator_meta.namespace }}.svc:8080
           restartPolicy: Never
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
