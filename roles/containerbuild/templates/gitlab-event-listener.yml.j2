@@ -54,22 +54,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: transformer
+  name: gitlab-transformer
   namespace: autosd-cb-operator-system
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: autosd-transformer
+      app: autosd-gitlab-transformer
   template:
     metadata:
       labels:
-        app: autosd-transformer
+        app: autosd-gitlab-transformer
     spec:
       nodeSelector:
         kubernetes.io/arch: amd64
       containers:
-        - name: autosd-transformer
+        - name: transformer
           image: quay.io/ahadas/transformer
           ports:
             - containerPort: 8080
