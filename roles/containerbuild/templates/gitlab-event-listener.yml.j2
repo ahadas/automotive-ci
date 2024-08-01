@@ -1,0 +1,75 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: {{ ansible_operator_meta.name }}-gitlab
+  namespace: {{ ansible_operator_meta.namespace }}
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - bindings:
+        - ref: {{ ansible_operator_meta.name }}
+      template:
+        ref: {{ ansible_operator_meta.name }}
+      interceptors:
+        - gitlab:
+            secretRef:
+              secretName: foo
+              secretKey: key
+            eventTypes:
+              - Note Hook
+        - webhook:
+            objectRef:
+              kind: Service
+              name: gitlab-transformer
+              apiVersion: v1
+              namespace: autosd-cb-operator-system
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: el-{{ ansible_operator_meta.name }}-gitlab
+  namespace: {{ ansible_operator_meta.namespace }}
+spec:
+  port:
+    targetPort: http-listener
+  to:
+    kind: Service
+    name: el-{{ ansible_operator_meta.name }}-gitlab
+    weight: 100
+  wildcardPolicy: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab-transformer
+  namespace: autosd-cb-operator-system
+spec:
+  selector:
+    app: autosd-transformer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transformer
+  namespace: autosd-cb-operator-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: autosd-transformer
+  template:
+    metadata:
+      labels:
+        app: autosd-transformer
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+        - name: autosd-transformer
+          image: quay.io/ahadas/transformer
+          ports:
+            - containerPort: 8080
