@@ -28,10 +28,6 @@
     k8s:
       state: present
       definition: "{{ lookup('template', 'triggertemplate.yml.j2') }}"
-  - name: "Apply trigger"
-    k8s:
-      state: present
-      definition: "{{ lookup('template', 'trigger.yml.j2') }}"
   - name: "Apply tasks"
     k8s:
       state: present

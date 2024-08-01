@@ -6,4 +6,7 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
-    - triggerRef: {{ ansible_operator_meta.name }}
+    - bindings:
+        - ref: {{ ansible_operator_meta.name }}
+      template:
+        ref: {{ ansible_operator_meta.name }}
