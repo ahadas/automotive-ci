@@ -5,7 +5,6 @@ metadata:
   namespace: autosd-cb-operator-system
 spec:
   git_url: https://gitlab.com/CentOS/automotive/container-images/eclipse-agemo.git
-  git_revision: main
   image_name: quay.io/container-ci-test/eclipse-agemo
   local_image: quay.io/container-ci-test/eclipse-agemo:test
   context_dir: .

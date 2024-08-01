@@ -11,10 +11,15 @@ import (
 
 type CommentEvent struct {
 	Attributes ObjectAttributes `json:"object_attributes"`
+	MR         MergeRequest     `json:"merge_request"`
 }
 
 type ObjectAttributes struct {
 	Note string `json:"note"`
+}
+
+type MergeRequest struct {
+        SourceBranch string `json:"source_branch"`
 }
 
 type StringSlice []string
@@ -37,13 +42,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
     decoder := json.NewDecoder(r.Body)
     defer r.Body.Close()
 
-    var payload CommentEvent
-    if err := decoder.Decode(&payload); err != nil {
+    var event CommentEvent
+    if err := decoder.Decode(&event); err != nil {
         http.Error(w, err.Error(), http.StatusBadRequest)
         return
     }
+    log.Printf("event: %+v\n", event)
 
-    cmd := strings.Fields(payload.Attributes.Note)
+    cmd := strings.Fields(event.Attributes.Note)
     log.Printf("command: %+v\n", cmd)
     if cmd[0] != "/build" {
         http.Error(w, "request does not start with /build", http.StatusBadRequest)
@@ -62,6 +68,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
     response := make(map[string]interface{})
     response["archs"] = allArchs
+    response["git_revision"] = event.MR.SourceBranch
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(response)
 }

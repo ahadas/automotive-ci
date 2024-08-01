@@ -5,7 +5,6 @@ metadata:
   namespace: autosd
 spec:
   git_url: https://gitlab.com/CentOS/automotive/container-images/autosd-buildbox-x86_64-to-aarch64-cross-tools.git
-  git_revision: main
   image_name: quay.io/container-ci-test/autosd-buildbox-x86_64-to-aarch64-cross-tools
   local_image: quay.io/container-ci-test/autosd-buildbox-x86_64-to-aarch64-cross-tools:test
   context_dir: .

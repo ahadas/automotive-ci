@@ -5,7 +5,6 @@ metadata:
   namespace: autosd-cb-operator-system
 spec:
   git_url: https://gitlab.com/CentOS/automotive/container-images/eclipse-kuksa.git
-  git_revision: main
   image_name: quay.io/container-ci-test/eclipse-kuksa
   local_image: quay.io/container-ci-test/eclipse-kuksa:test
   context_dir: .

@@ -5,7 +5,6 @@ metadata:
   namespace: autosd-cb-operator-system
 spec:
   git_url: https://gitlab.com/CentOS/automotive/container-images/autosd-buildbox.git
-  git_revision: main
   image_name: quay.io/container-ci-test/autosd-buildbox
   local_image: quay.io/container-ci-test/autosd-buildbox:test
   context_dir: .

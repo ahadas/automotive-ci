@@ -11,10 +11,8 @@ spec:
     value: $(body.archs.amd64)
   - name: git-url
     value: {{ git_url }}
-{% if git_revision is defined %}
   - name: git-revision
-    value: {{ git_revision }}
-{% endif %}
+    value: $(body.git_revision)
   - name: image-name
     value: {{ image_name }}
   - name: local-image

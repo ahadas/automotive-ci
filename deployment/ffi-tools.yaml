@@ -6,7 +6,6 @@ metadata:
 spec:
   git_url: 'https://gitlab.com/CentOS/automotive/container-images/ffi-tools.git'
   local_image: 'quay.io/container-ci-test/ffi-tools:test'
-  git_revision: main
   build_args: '--cap-add=sys_admin'
   image_name: quay.io/container-ci-test/ffi-tools
   test_path: /workspace/source-workspace/Makefile
