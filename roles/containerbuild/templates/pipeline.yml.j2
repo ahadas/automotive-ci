@@ -77,6 +77,31 @@ spec:
           workspace: source-workspace
         - name: oci-images
           workspace: oci-images
+    - name: push-x86-64
+      when:
+        - input: $(params.amd64)
+          operator: in
+          values: ["true"]
+      params:
+        - name: image-name
+          value: $(params.image-name)
+        - name: architectures
+          value:
+            - x86_64
+      runAfter:
+{% if tests %}
+        - run-tests-x86-64
+{% else %}
+        - build-x86-64
+{% endif %}
+      taskRef:
+        kind: Task
+        name: buildah-push
+      workspaces:
+        - name: oci-images
+          workspace: oci-images
+        - name: dockerconfig
+          workspace: registry-token
     - name: build-aarch64
       when:
         - input: $(params.arm64)
@@ -99,20 +124,21 @@ spec:
           workspace: source-workspace
         - name: oci-images
           workspace: oci-images
-    - name: push-image
+    - name: push-aarch64
+      when:
+        - input: $(params.arm64)
+          operator: in
+          values: ["true"]
       params:
         - name: image-name
           value: $(params.image-name)
         - name: architectures
           value:
-            - x86_64
             - aarch64
       runAfter:
 {% if tests %}
-        - run-tests-x86-64
         - run-tests-aarch64
 {% else %}
-        - build-x86-64
         - build-aarch64
 {% endif %}
       taskRef:
