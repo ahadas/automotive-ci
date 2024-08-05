@@ -7,3 +7,4 @@ tests: true
 notify_email: true
 build_args: ''
 nightly_builds: true
+gitlab: false

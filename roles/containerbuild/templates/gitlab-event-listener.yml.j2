@@ -41,11 +41,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gitlab-transformer
-  namespace: autosd-cb-operator-system
+  name: {{ ansible_operator_meta.name }}-gitlab-transformer
+  namespace: {{ ansible_operator_meta.namespace }}
 spec:
   selector:
-    app: autosd-gitlab-transformer
+    app: {{ ansible_operator_meta.name }}-gitlab-transformer
   ports:
     - protocol: TCP
       port: 80
@@ -54,17 +54,17 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gitlab-transformer
-  namespace: autosd-cb-operator-system
+  name: {{ ansible_operator_meta.name }}-gitlab-transformer
+  namespace: {{ ansible_operator_meta.namespace }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: autosd-gitlab-transformer
+      app: {{ ansible_operator_meta.name }}-gitlab-transformer
   template:
     metadata:
       labels:
-        app: autosd-gitlab-transformer
+        app: {{ ansible_operator_meta.name }}-gitlab-transformer
     spec:
       nodeSelector:
         kubernetes.io/arch: amd64

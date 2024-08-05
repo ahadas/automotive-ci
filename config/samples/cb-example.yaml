@@ -12,3 +12,4 @@ spec:
   containerfile: Containerfile
   test_path: /workspace/source-workspace/test
   test_command: bash
+  gitlab: true

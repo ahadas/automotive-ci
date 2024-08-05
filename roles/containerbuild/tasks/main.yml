@@ -8,10 +8,19 @@
     #k8s:
       #state: present
       #definition: "{{ lookup('template', 'quay-secret.yml.j2') }}"
-  - name: "Apply GitLab event-listener"
-    k8s:
-      state: present
-      definition: "{{ lookup('template', 'gitlab-event-listener.yml.j2') }}"
+
+  - when: gitlab|bool
+    block:
+    - name: "Apply GitLab event-listener"
+      k8s:
+        state: present
+        definition: "{{ lookup('template', 'gitlab-event-listener.yml.j2') }}"
+  - when: not gitlab|bool
+    block:
+    - name: "Delete GitLab event-listener"
+      k8s:
+        state: absent
+        definition: "{{ lookup('template', 'gitlab-event-listener.yml.j2') }}"
 
   - when: nightly_builds|bool
     block:
