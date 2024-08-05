@@ -11,3 +11,4 @@ spec:
   containerfile: Containerfile
   test_path: /workspace/source-workspace/Makefile
   test_command: cat
+  nightly_builds: false

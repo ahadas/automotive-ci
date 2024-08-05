@@ -6,3 +6,4 @@ namespace: autosd-cb-operator-system
 tests: true
 notify_email: true
 build_args: ''
+nightly_builds: true
