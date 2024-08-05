@@ -30,11 +30,16 @@ First, you need to choose where to publish the image of the operator and set the
 After deploying the operator, it waits for per-respository configuration to be posted to the OpenShift cluster. You look at the examples in the `deployment` folder for references of ContainerBuild configurations. We will demonstrate the process for the [automotive-osbuild repository](https://gitlab.com/CentOS/automotive/container-images/automotive-osbuild) using the [automotive-osbuild.yaml] configuration that is stored in the `deployment` folder. For further details about the supported configuration properties, see the default settings [here](roles/containerbuild/defaults/main.yml).
 
 Deploy a ContainerBuild instance:
-# oc apply -f deployment/automotive-osbuild.yaml
+```bash
+oc apply -f deployment/automotive-osbuild.yaml
+```
 
 This leads to having the following entities:
 1. A pipeline for cloning the code repository and then build, test, and push a container image from this repository.
-2. A cron job that triggers the abovementioned pipeline for nightly builds. The cron job is named after the ContainerBuild instance with a `-nightly` postfix. You can trigger this cron job for testing by creating a job from it: oc -n autosd create job test --from=cronjob/automotive-osbuild-nightly.
+2. A cron job that triggers the abovementioned pipeline for nightly builds. The cron job is named after the ContainerBuild instance with a `-nightly` postfix. You can trigger this cron job for testing by creating a job from it:
+```bash
+oc -n autosd create job test --from=cronjob/automotive-osbuild-nightly
+```
 3. A route for a webhook for GitLab.
 
 
