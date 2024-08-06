@@ -36,6 +36,8 @@ oc apply -f deployment/automotive-osbuild.yaml
 
 As a result, a new pipeline that can build, test, and push a container image from the repository will be created. The pipeline is named after the `ContainerBuild` instance and resides within the same namespace as the `ContainerBuild` instance.
 
+TODO: explain how to set a secret for the image registry
+
 ### Nightly Builds
 
 Nightly builds can be disabled by specifying `nightly_builds: false` in the `ContainerBuild` instance. However, if nightly builds are not disabled, the operator creates a daily cron job that triggers the abovementioned pipeline.
@@ -47,7 +49,9 @@ oc -n autosd create job test --from=cronjob/automotive-osbuild-nightly
 
 ### GitLab Integration
 
-A route for a webhook for GitLab.
+By default, the GitLab integration is disabled. You can enable it by specifying `gitlab: true` in the `ContainerBuild` instance.
+
+TODO: explain that a route for a webhook is created, how to set tokens.
 
 
 ## More Resources
