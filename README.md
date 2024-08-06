@@ -40,7 +40,7 @@ TODO: explain how to set a secret for the image registry
 
 ### Nightly Builds
 
-Nightly builds can be disabled by specifying `nightly_builds: false` in the `ContainerBuild` instance. However, if nightly builds are not disabled, the operator creates a daily cron job that triggers the abovementioned pipeline.
+Nightly builds can be disabled by specifying `nightly_builds: false` in the `ContainerBuild` instance. However, when nightly builds are not disabled, the operator creates a daily cron job that triggers the abovementioned pipeline.
 
 You can trigger this cron job immediately by creating a job from it:
 ```bash
@@ -51,7 +51,7 @@ oc -n autosd create job test --from=cronjob/automotive-osbuild-nightly
 
 By default, the GitLab integration is disabled. You can enable it by specifying `gitlab: true` in the `ContainerBuild` instance.
 
-TODO: explain that a route for a webhook is created, how to set tokens.
+TODO: explain that a route for a webhook is created, how to set tokens
 
 
 ## More Resources
