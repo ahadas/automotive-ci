@@ -20,9 +20,9 @@ spec:
         - webhook:
             objectRef:
               kind: Service
-              name: gitlab-transformer
+              name: {{ ansible_operator_meta.name }}-gitlab-transformer
               apiVersion: v1
-              namespace: autosd-cb-operator-system
+              namespace: {{ ansible_operator_meta.namespace }}
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
@@ -73,3 +73,16 @@ spec:
           image: quay.io/ahadas/transformer
           ports:
             - containerPort: 8080
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: {{ ansible_operator_meta.name }}-gitlab-post-pipelinerun
+  namespace: {{ ansible_operator_meta.namespace }}
+spec:
+  steps:
+    - name: echo
+      image: registry.access.redhat.com/ubi9-minimal@sha256:104cf11d890aeb7dd5728b7d7732e175a0e4018f1bb00d2faebcc8f6bf29bd52
+      script: |
+        #!/bin/sh
+        curl --header "PRIVATE-TOKEN: glpat-VaZ2rTSZg9Cz1vy1iKjm" --request POST --data "body=pipeline" https://gitlab.com/api/v4/projects/60513999/merge_requests/1/notes 
