@@ -4,7 +4,7 @@ metadata:
   name: automotive-osbuild
   namespace: autosd
 spec:
-  git_url: https://gitlab.com/CentOS/automotive/container-images/automotive-osbuild.git
+  git_url: https://gitlab.com/ahadas/automotive-osbuild.git
   image_name: quay.io/container-ci-test/automotive-osbuild
   local_image: quay.io/container-ci-test/automotive-osbuild:test
   context_dir: .

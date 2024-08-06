@@ -34,14 +34,20 @@ Deploy a `ContainerBuild` instance:
 oc apply -f deployment/automotive-osbuild.yaml
 ```
 
-This leads to having the following entities:
-1. A pipeline for cloning the code repository and then build, test, and push a container image from this repository.
-2. A cron job that triggers the abovementioned pipeline for nightly builds. The cron job is named after the `ContainerBuild` instance with a `-nightly` postfix. Nightly builds can be disabled by specifying `nightly_builds: false` in the `ContainerBuild` instance. You can trigger this cron job for testing by creating a job from it:
+As a result, a new pipeline that can build, test, and push a container image from the repository will be created. The pipeline is named after the `ContainerBuild` instance and resides within the same namespace as the `ContainerBuild` instance.
+
+### Nightly Builds
+
+Nightly builds can be disabled by specifying `nightly_builds: false` in the `ContainerBuild` instance. However, if nightly builds are not disabled, the operator creates a daily cron job that triggers the abovementioned pipeline.
+
+You can trigger this cron job immediately by creating a job from it:
 ```bash
 oc -n autosd create job test --from=cronjob/automotive-osbuild-nightly
 ```
 
-3. A route for a webhook for GitLab.
+### GitLab Integration
+
+A route for a webhook for GitLab.
 
 
 ## More Resources
